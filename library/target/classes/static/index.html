@@ -1,0 +1,2065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>LibroTrack | Library Management</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    body {
+      background: #f4f7fb;
+      color: #1e293b;
+      min-height: 100vh;
+    }
+
+    /* ================= SIDEBAR ================= */
+
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 250px;
+      height: 100vh;
+      background: #111827;
+      color: white;
+      padding: 25px 18px;
+      z-index: 1000;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 5px 10px 30px;
+    }
+
+    .logo-icon {
+      width: 42px;
+      height: 42px;
+      background: #2563eb;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    .logo h2 {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .logo span {
+      display: block;
+      color: #94a3b8;
+      font-size: 11px;
+      margin-top: 2px;
+    }
+
+    .nav-title {
+      color: #64748b;
+      font-size: 11px;
+      font-weight: 600;
+      margin: 15px 10px 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .nav-item {
+      padding: 12px 14px;
+      margin: 5px 0;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      color: #cbd5e1;
+      transition: 0.2s;
+    }
+
+    .nav-item:hover {
+      background: #1e293b;
+      color: white;
+    }
+
+    .nav-item.active {
+      background: #2563eb;
+      color: white;
+    }
+
+    .nav-icon {
+      width: 22px;
+      text-align: center;
+    }
+
+    /* ================= MAIN ================= */
+
+    .main {
+      margin-left: 250px;
+      padding: 28px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 28px;
+    }
+
+    .topbar h1 {
+      font-size: 27px;
+      color: #0f172a;
+    }
+
+    .topbar p {
+      color: #64748b;
+      margin-top: 4px;
+      font-size: 14px;
+    }
+
+    .system-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: white;
+      border: 1px solid #e2e8f0;
+      padding: 10px 15px;
+      border-radius: 10px;
+      font-size: 13px;
+    }
+
+    .status-dot {
+      width: 9px;
+      height: 9px;
+      background: #22c55e;
+      border-radius: 50%;
+    }
+
+    /* ================= PAGES ================= */
+
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    /* ================= CARDS ================= */
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-bottom: 25px;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 21px;
+      border-radius: 14px;
+      border: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .stat-card h3 {
+      font-size: 27px;
+      margin-bottom: 5px;
+    }
+
+    .stat-card p {
+      color: #64748b;
+      font-size: 13px;
+    }
+
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      background: #eff6ff;
+    }
+
+    .content-card {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 22px;
+      margin-bottom: 20px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .card-header h2 {
+      font-size: 18px;
+    }
+
+    /* ================= BUTTONS ================= */
+
+    button {
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .btn-primary {
+      background: #2563eb;
+      color: white;
+      padding: 10px 17px;
+      border-radius: 8px;
+    }
+
+    .btn-primary:hover {
+      background: #1d4ed8;
+    }
+
+    .btn-success {
+      background: #16a34a;
+      color: white;
+      padding: 8px 13px;
+      border-radius: 7px;
+    }
+
+    .btn-danger {
+      background: #dc2626;
+      color: white;
+      padding: 8px 13px;
+      border-radius: 7px;
+    }
+
+    .btn-secondary {
+      background: #e2e8f0;
+      color: #334155;
+      padding: 9px 14px;
+      border-radius: 8px;
+    }
+
+    .btn-warning {
+      background: #f59e0b;
+      color: white;
+      padding: 8px 13px;
+      border-radius: 7px;
+    }
+
+    /* ================= TABLE ================= */
+
+    .table-wrapper {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      text-align: left;
+      padding: 13px;
+      background: #f8fafc;
+      color: #64748b;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .4px;
+    }
+
+    td {
+      padding: 14px 13px;
+      border-top: 1px solid #edf2f7;
+      font-size: 14px;
+    }
+
+    tr:hover td {
+      background: #fafcff;
+    }
+
+    /* ================= BADGES ================= */
+
+    .badge {
+      padding: 5px 9px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .badge-issued {
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+
+    .badge-returned {
+      background: #dcfce7;
+      color: #15803d;
+    }
+
+    .badge-overdue {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    /* ================= FORMS ================= */
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #475569;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 11px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      outline: none;
+      font-size: 14px;
+      background: white;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, .08);
+    }
+
+    /* ================= SEARCH ================= */
+
+    .search-box {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr) auto;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    /* ================= DASHBOARD ================= */
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 20px;
+    }
+
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .quick-action {
+      padding: 18px;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: .2s;
+    }
+
+    .quick-action:hover {
+      border-color: #2563eb;
+      background: #f8fbff;
+    }
+
+    .quick-action strong {
+      display: block;
+      margin-top: 8px;
+    }
+
+    .quick-action span {
+      color: #64748b;
+      font-size: 12px;
+    }
+
+    /* ================= MODAL ================= */
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, .55);
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      padding: 20px;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      width: 100%;
+      max-width: 600px;
+      border-radius: 15px;
+      padding: 25px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .close {
+      font-size: 25px;
+      cursor: pointer;
+      color: #64748b;
+    }
+
+    /* ================= TOAST ================= */
+
+    .toast {
+      position: fixed;
+      right: 25px;
+      bottom: 25px;
+      background: #0f172a;
+      color: white;
+      padding: 14px 18px;
+      border-radius: 9px;
+      display: none;
+      z-index: 3000;
+      max-width: 350px;
+      font-size: 14px;
+    }
+
+    .toast.show {
+      display: block;
+    }
+
+    .toast.success {
+      background: #15803d;
+    }
+
+    .toast.error {
+      background: #b91c1c;
+    }
+
+    /* ================= EMPTY ================= */
+
+    .empty {
+      text-align: center;
+      padding: 40px;
+      color: #94a3b8;
+    }
+
+    /* ================= RESPONSIVE ================= */
+
+    @media (max-width: 1100px) {
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 800px) {
+      .sidebar {
+        width: 70px;
+        padding: 15px 8px;
+      }
+
+      .logo h2,
+      .logo span,
+      .nav-item span:not(.nav-icon),
+      .nav-title {
+        display: none;
+      }
+
+      .logo {
+        justify-content: center;
+        padding-bottom: 20px;
+      }
+
+      .nav-item {
+        justify-content: center;
+      }
+
+      .main {
+        margin-left: 70px;
+        padding: 18px;
+      }
+
+      .form-grid,
+      .search-box {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- ================= SIDEBAR ================= -->
+
+<aside class="sidebar">
+
+  <div class="logo">
+    <div class="logo-icon">📚</div>
+
+    <div>
+      <h2>LibroTrack</h2>
+      <span>Library Management</span>
+    </div>
+  </div>
+
+  <div class="nav-title">Main</div>
+
+  <div class="nav-item active" onclick="showPage('dashboard', this)">
+    <span class="nav-icon">📊</span>
+    <span>Dashboard</span>
+  </div>
+
+  <div class="nav-item" onclick="showPage('books', this)">
+    <span class="nav-icon">📚</span>
+    <span>Books</span>
+  </div>
+
+  <div class="nav-item" onclick="showPage('students', this)">
+    <span class="nav-icon">👨‍🎓</span>
+    <span>Students</span>
+  </div>
+
+  <div class="nav-title">Library</div>
+
+  <div class="nav-item" onclick="showPage('issue', this)">
+    <span class="nav-icon">📖</span>
+    <span>Issue Book</span>
+  </div>
+
+  <div class="nav-item" onclick="showPage('issued', this)">
+    <span class="nav-icon">🔄</span>
+    <span>Issued Books</span>
+  </div>
+
+  <div class="nav-item" onclick="showPage('search', this)">
+    <span class="nav-icon">🔎</span>
+    <span>Search Books</span>
+  </div>
+
+  <div class="nav-title">Analytics</div>
+
+  <div class="nav-item" onclick="showPage('reports', this)">
+    <span class="nav-icon">📑</span>
+    <span>Reports</span>
+  </div>
+
+</aside>
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="main">
+
+  <div class="topbar">
+    <div>
+      <h1 id="pageTitle">Dashboard</h1>
+      <p id="pageSubtitle">Library overview and activity</p>
+    </div>
+
+    <div class="system-status">
+      <span class="status-dot"></span>
+      Backend Connected
+    </div>
+  </div>
+
+
+  <!-- ================= DASHBOARD ================= -->
+
+  <section id="dashboard" class="page active">
+
+    <div class="stats-grid">
+
+      <div class="stat-card">
+        <div>
+          <h3 id="bookCount">0</h3>
+          <p>Total Books</p>
+        </div>
+        <div class="stat-icon">📚</div>
+      </div>
+
+      <div class="stat-card">
+        <div>
+          <h3 id="studentCount">0</h3>
+          <p>Total Students</p>
+        </div>
+        <div class="stat-icon">👨‍🎓</div>
+      </div>
+
+      <div class="stat-card">
+        <div>
+          <h3 id="issuedCount">0</h3>
+          <p>Currently Issued</p>
+        </div>
+        <div class="stat-icon">📖</div>
+      </div>
+
+      <div class="stat-card">
+        <div>
+          <h3 id="fineCount">₹0</h3>
+          <p>Total Fine</p>
+        </div>
+        <div class="stat-icon">💰</div>
+      </div>
+
+    </div>
+
+
+    <div class="dashboard-grid">
+
+      <div class="content-card">
+
+        <div class="card-header">
+          <h2>Recent Issued Books</h2>
+
+          <button class="btn-secondary"
+                  onclick="showPage('issued')">
+            View All
+          </button>
+        </div>
+
+        <div class="table-wrapper">
+
+          <table>
+
+            <thead>
+            <tr>
+              <th>ID</th>
+              <th>Book</th>
+              <th>Student</th>
+              <th>Due Date</th>
+              <th>Status</th>
+            </tr>
+            </thead>
+
+            <tbody id="dashboardIssues"></tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+
+      <div class="content-card">
+
+        <div class="card-header">
+          <h2>Quick Actions</h2>
+        </div>
+
+        <div class="quick-actions">
+
+          <div class="quick-action"
+               onclick="openBookModal()">
+            <div>📚</div>
+            <strong>Add Book</strong>
+            <span>Register a new book</span>
+          </div>
+
+          <div class="quick-action"
+               onclick="openStudentModal()">
+            <div>👨‍🎓</div>
+            <strong>Add Student</strong>
+            <span>Register student</span>
+          </div>
+
+          <div class="quick-action"
+               onclick="showPage('issue')">
+            <div>📖</div>
+            <strong>Issue Book</strong>
+            <span>Issue a book</span>
+          </div>
+
+          <div class="quick-action"
+               onclick="showPage('search')">
+            <div>🔎</div>
+            <strong>Search</strong>
+            <span>Find books</span>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ================= BOOKS ================= -->
+
+  <section id="books" class="page">
+
+    <div class="content-card">
+
+      <div class="card-header">
+
+        <h2>Books</h2>
+
+        <button class="btn-primary"
+                onclick="openBookModal()">
+          + Add Book
+        </button>
+
+      </div>
+
+      <div class="table-wrapper">
+
+        <table>
+
+          <thead>
+          <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>ISBN</th>
+            <th>Category</th>
+            <th>Copies</th>
+            <th>Action</th>
+          </tr>
+          </thead>
+
+          <tbody id="booksTable"></tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ================= STUDENTS ================= -->
+
+  <section id="students" class="page">
+
+    <div class="content-card">
+
+      <div class="card-header">
+
+        <h2>Students</h2>
+
+        <button class="btn-primary"
+                onclick="openStudentModal()">
+          + Add Student
+        </button>
+
+      </div>
+
+      <div class="table-wrapper">
+
+        <table>
+
+          <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Action</th>
+          </tr>
+          </thead>
+
+          <tbody id="studentsTable"></tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ================= ISSUE BOOK ================= -->
+
+  <section id="issue" class="page">
+
+    <div class="content-card">
+
+      <div class="card-header">
+        <h2>Issue Book</h2>
+      </div>
+
+      <form id="issueForm">
+
+        <div class="form-grid">
+
+          <div class="form-group">
+            <label>Book</label>
+
+            <select id="issueBookId" required>
+              <option value="">Select Book</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Student</label>
+
+            <select id="issueStudentId" required>
+              <option value="">Select Student</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Issue Date</label>
+
+            <input
+                    type="date"
+                    id="issueDate">
+          </div>
+
+        </div>
+
+        <br>
+
+        <button class="btn-primary" type="submit">
+          Issue Book
+        </button>
+
+      </form>
+
+    </div>
+
+
+    <div class="content-card">
+
+      <div class="card-header">
+        <h2>Issue Rules</h2>
+      </div>
+
+      <ul style="line-height:2; color:#64748b; padding-left:20px;">
+        <li>Due date is automatically calculated as 14 days after issue date.</li>
+        <li>A book cannot be issued when all copies are checked out.</li>
+        <li>Returned books become available again.</li>
+        <li>Overdue books receive a daily fine.</li>
+      </ul>
+
+    </div>
+
+  </section>
+
+
+  <!-- ================= ISSUED ================= -->
+
+  <section id="issued" class="page">
+
+    <div class="content-card">
+
+      <div class="card-header">
+
+        <h2>Currently Issued Books</h2>
+
+        <button class="btn-secondary"
+                onclick="loadIssuedBooks()">
+          ↻ Refresh
+        </button>
+
+      </div>
+
+      <div class="table-wrapper">
+
+        <table>
+
+          <thead>
+
+          <tr>
+            <th>ID</th>
+            <th>Book ID</th>
+            <th>Student ID</th>
+            <th>Issue Date</th>
+            <th>Due Date</th>
+            <th>Fine</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+
+          </thead>
+
+          <tbody id="issuedTable"></tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ================= SEARCH ================= -->
+
+  <section id="search" class="page">
+
+    <div class="content-card">
+
+      <div class="card-header">
+        <h2>Search Books</h2>
+      </div>
+
+      <div class="search-box">
+
+        <input
+                type="text"
+                id="searchTitle"
+                placeholder="Search by title">
+
+        <input
+                type="text"
+                id="searchAuthor"
+                placeholder="Search by author">
+
+        <input
+                type="text"
+                id="searchCategory"
+                placeholder="Search by category">
+
+        <button class="btn-primary"
+                onclick="searchBooks()">
+          Search
+        </button>
+
+      </div>
+
+      <div class="table-wrapper">
+
+        <table>
+
+          <thead>
+
+          <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>ISBN</th>
+            <th>Category</th>
+            <th>Copies</th>
+          </tr>
+
+          </thead>
+
+          <tbody id="searchTable"></tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ================= REPORTS ================= -->
+
+  <section id="reports" class="page">
+
+    <div class="stats-grid">
+
+      <div class="stat-card">
+        <div>
+          <h3 id="reportBooks">0</h3>
+          <p>Total Books</p>
+        </div>
+        <div class="stat-icon">📚</div>
+      </div>
+
+      <div class="stat-card">
+        <div>
+          <h3 id="reportStudents">0</h3>
+          <p>Total Students</p>
+        </div>
+        <div class="stat-icon">👨‍🎓</div>
+      </div>
+
+      <div class="stat-card">
+        <div>
+          <h3 id="reportIssued">0</h3>
+          <p>Books Issued</p>
+        </div>
+        <div class="stat-icon">📖</div>
+      </div>
+
+      <div class="stat-card">
+        <div>
+          <h3 id="reportFine">₹0</h3>
+          <p>Total Fine</p>
+        </div>
+        <div class="stat-icon">💰</div>
+      </div>
+
+    </div>
+
+
+    <div class="content-card">
+
+      <div class="card-header">
+
+        <h2>Library Issue Report</h2>
+
+        <button class="btn-primary"
+                onclick="window.print()">
+          🖨 Print Report
+        </button>
+
+      </div>
+
+      <div class="table-wrapper">
+
+        <table>
+
+          <thead>
+
+          <tr>
+            <th>Issue ID</th>
+            <th>Book ID</th>
+            <th>Student ID</th>
+            <th>Issue Date</th>
+            <th>Due Date</th>
+            <th>Return Date</th>
+            <th>Fine</th>
+            <th>Status</th>
+          </tr>
+
+          </thead>
+
+          <tbody id="reportTable"></tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+  </section>
+
+</main>
+
+
+<!-- ================= BOOK MODAL ================= -->
+
+<div class="modal" id="bookModal">
+
+  <div class="modal-content">
+
+    <div class="modal-header">
+
+      <h2>Add Book</h2>
+
+      <span class="close"
+            onclick="closeModal('bookModal')">
+                ×
+            </span>
+
+    </div>
+
+    <form id="bookForm">
+
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label>Title</label>
+          <input id="bookTitle" required>
+        </div>
+
+        <div class="form-group">
+          <label>Author</label>
+          <input id="bookAuthor" required>
+        </div>
+
+        <div class="form-group">
+          <label>ISBN</label>
+          <input id="bookIsbn">
+        </div>
+
+        <div class="form-group">
+          <label>Category</label>
+          <input id="bookCategory">
+        </div>
+
+        <div class="form-group">
+          <label>Number of Copies</label>
+          <input
+                  type="number"
+                  id="bookCopies"
+                  min="1"
+                  required>
+        </div>
+
+      </div>
+
+      <br>
+
+      <button class="btn-primary"
+              type="submit">
+        Add Book
+      </button>
+
+    </form>
+
+  </div>
+
+</div>
+
+
+<!-- ================= STUDENT MODAL ================= -->
+
+<div class="modal" id="studentModal">
+
+  <div class="modal-content">
+
+    <div class="modal-header">
+
+      <h2>Add Student</h2>
+
+      <span class="close"
+            onclick="closeModal('studentModal')">
+                ×
+            </span>
+
+    </div>
+
+    <form id="studentForm">
+
+      <div class="form-grid">
+
+        <div class="form-group full">
+          <label>Name</label>
+          <input id="studentName" required>
+        </div>
+
+        <div class="form-group">
+          <label>Email</label>
+          <input
+                  type="email"
+                  id="studentEmail">
+        </div>
+
+        <div class="form-group">
+          <label>Phone</label>
+          <input id="studentPhone">
+        </div>
+
+      </div>
+
+      <br>
+
+      <button class="btn-primary"
+              type="submit">
+        Add Student
+      </button>
+
+    </form>
+
+  </div>
+
+</div>
+
+
+<!-- ================= TOAST ================= -->
+
+<div class="toast" id="toast"></div>
+
+
+<script>
+
+  const API = "http://localhost:8080/api";
+
+
+  /* ================= NAVIGATION ================= */
+
+  function showPage(pageId, element) {
+
+    document.querySelectorAll(".page")
+            .forEach(page => page.classList.remove("active"));
+
+    document.getElementById(pageId)
+            .classList.add("active");
+
+    document.querySelectorAll(".nav-item")
+            .forEach(item => item.classList.remove("active"));
+
+    if (element) {
+      element.classList.add("active");
+    }
+
+    const titles = {
+      dashboard: ["Dashboard", "Library overview and activity"],
+      books: ["Books", "Manage library books"],
+      students: ["Students", "Manage registered students"],
+      issue: ["Issue Book", "Issue books to students"],
+      issued: ["Issued Books", "View and return currently issued books"],
+      search: ["Search Books", "Find books by title, author or category"],
+      reports: ["Reports", "Library activity and statistics"]
+    };
+
+    document.getElementById("pageTitle").textContent =
+            titles[pageId][0];
+
+    document.getElementById("pageSubtitle").textContent =
+            titles[pageId][1];
+
+    if (pageId === "dashboard") {
+      loadDashboard();
+    }
+
+    if (pageId === "books") {
+      loadBooks();
+    }
+
+    if (pageId === "students") {
+      loadStudents();
+    }
+
+    if (pageId === "issue") {
+      loadIssueDropdowns();
+    }
+
+    if (pageId === "issued") {
+      loadIssuedBooks();
+    }
+
+    if (pageId === "reports") {
+      loadReports();
+    }
+  }
+
+
+  /* ================= API HELPER ================= */
+
+  async function api(url, options = {}) {
+
+    try {
+
+      const response = await fetch(API + url, {
+        ...options,
+        headers: {
+          "Content-Type": "application/json",
+          ...(options.headers || {})
+        }
+      });
+
+      const text = await response.text();
+
+      let data;
+
+      try {
+        data = text ? JSON.parse(text) : null;
+      } catch {
+        data = text;
+      }
+
+      if (!response.ok) {
+
+        let message = "Request failed";
+
+        if (typeof data === "object" && data) {
+          message =
+                  data.error ||
+                  data.message ||
+                  data.status ||
+                  message;
+        } else if (data) {
+          message = data;
+        }
+
+        throw new Error(message);
+      }
+
+      return data;
+
+    } catch (error) {
+
+      showToast(error.message, "error");
+
+      throw error;
+    }
+  }
+
+
+  /* ================= TOAST ================= */
+
+  function showToast(message, type = "") {
+
+    const toast = document.getElementById("toast");
+
+    toast.textContent = message;
+
+    toast.className = "toast show " + type;
+
+    setTimeout(() => {
+      toast.className = "toast";
+    }, 3500);
+  }
+
+
+  /* ================= MODALS ================= */
+
+  function openBookModal() {
+    document.getElementById("bookModal")
+            .classList.add("show");
+  }
+
+  function openStudentModal() {
+    document.getElementById("studentModal")
+            .classList.add("show");
+  }
+
+  function closeModal(id) {
+    document.getElementById(id)
+            .classList.remove("show");
+  }
+
+
+  /* ================= BOOKS ================= */
+
+  async function loadBooks() {
+
+    const books = await api("/books/all");
+
+    const table =
+            document.getElementById("booksTable");
+
+    if (!books.length) {
+
+      table.innerHTML =
+              `<tr>
+                    <td colspan="7" class="empty">
+                        No books found
+                    </td>
+                </tr>`;
+
+      return;
+    }
+
+    table.innerHTML = books.map(book => `
+
+            <tr>
+
+                <td>${book.id}</td>
+
+                <td>
+                    <strong>${escapeHtml(book.title)}</strong>
+                </td>
+
+                <td>${escapeHtml(book.author)}</td>
+
+                <td>${book.isbn || "-"}</td>
+
+                <td>${book.category || "-"}</td>
+
+                <td>
+                    <span class="badge badge-issued">
+                        ${book.numberOfCopies}
+                    </span>
+                </td>
+
+                <td>
+
+                    <button
+                        class="btn-danger"
+                        onclick="deleteBook(${book.id})">
+                        Delete
+                    </button>
+
+                </td>
+
+            </tr>
+
+        `).join("");
+  }
+
+
+  document.getElementById("bookForm")
+          .addEventListener("submit", async function(event) {
+
+            event.preventDefault();
+
+            const book = {
+
+              title:
+              document.getElementById("bookTitle").value,
+
+              author:
+              document.getElementById("bookAuthor").value,
+
+              isbn:
+              document.getElementById("bookIsbn").value,
+
+              category:
+              document.getElementById("bookCategory").value,
+
+              numberOfCopies:
+                      Number(
+                              document.getElementById("bookCopies").value
+                      )
+            };
+
+            try {
+
+              await api("/books/add", {
+                method: "POST",
+                body: JSON.stringify(book)
+              });
+
+              showToast("Book added successfully", "success");
+
+              this.reset();
+
+              closeModal("bookModal");
+
+              loadBooks();
+
+              loadDashboard();
+
+            } catch (error) {}
+
+          });
+
+
+  async function deleteBook(id) {
+
+    if (!confirm("Delete this book?")) return;
+
+    try {
+
+      await api(`/books/delete/${id}`, {
+        method: "DELETE"
+      });
+
+      showToast("Book deleted successfully", "success");
+
+      loadBooks();
+      loadDashboard();
+
+    } catch (error) {}
+
+  }
+
+
+  /* ================= STUDENTS ================= */
+
+  async function loadStudents() {
+
+    const students =
+            await api("/students/all");
+
+    const table =
+            document.getElementById("studentsTable");
+
+    if (!students.length) {
+
+      table.innerHTML =
+              `<tr>
+                    <td colspan="5" class="empty">
+                        No students found
+                    </td>
+                </tr>`;
+
+      return;
+    }
+
+    table.innerHTML = students.map(student => `
+
+            <tr>
+
+                <td>${student.id}</td>
+
+                <td>
+                    <strong>${escapeHtml(student.name)}</strong>
+                </td>
+
+                <td>${student.email || "-"}</td>
+
+                <td>${student.phone || "-"}</td>
+
+                <td>
+
+                    <button
+                        class="btn-danger"
+                        onclick="deleteStudent(${student.id})">
+                        Delete
+                    </button>
+
+                </td>
+
+            </tr>
+
+        `).join("");
+  }
+
+
+  document.getElementById("studentForm")
+          .addEventListener("submit", async function(event) {
+
+            event.preventDefault();
+
+            const student = {
+
+              name:
+              document.getElementById("studentName").value,
+
+              email:
+              document.getElementById("studentEmail").value,
+
+              phone:
+              document.getElementById("studentPhone").value
+            };
+
+            try {
+
+              await api("/students/add", {
+                method: "POST",
+                body: JSON.stringify(student)
+              });
+
+              showToast(
+                      "Student added successfully",
+                      "success"
+              );
+
+              this.reset();
+
+              closeModal("studentModal");
+
+              loadStudents();
+
+              loadDashboard();
+
+            } catch (error) {}
+
+          });
+
+
+  async function deleteStudent(id) {
+
+    if (!confirm("Delete this student?")) return;
+
+    try {
+
+      await api(`/students/delete/${id}`, {
+        method: "DELETE"
+      });
+
+      showToast(
+              "Student deleted successfully",
+              "success"
+      );
+
+      loadStudents();
+      loadDashboard();
+
+    } catch (error) {}
+
+  }
+
+
+  /* ================= ISSUE DROPDOWNS ================= */
+
+  async function loadIssueDropdowns() {
+
+    const books =
+            await api("/books/all");
+
+    const students =
+            await api("/students/all");
+
+    const bookSelect =
+            document.getElementById("issueBookId");
+
+    const studentSelect =
+            document.getElementById("issueStudentId");
+
+    bookSelect.innerHTML =
+            `<option value="">Select Book</option>`;
+
+    books.forEach(book => {
+
+      bookSelect.innerHTML += `
+                <option value="${book.id}">
+                    ${escapeHtml(book.title)}
+                    (${book.numberOfCopies} copies)
+                </option>
+            `;
+    });
+
+
+    studentSelect.innerHTML =
+            `<option value="">Select Student</option>`;
+
+    students.forEach(student => {
+
+      studentSelect.innerHTML += `
+                <option value="${student.id}">
+                    ${escapeHtml(student.name)}
+                </option>
+            `;
+    });
+
+
+    if (!document.getElementById("issueDate").value) {
+
+      document.getElementById("issueDate").value =
+              new Date().toISOString().split("T")[0];
+
+    }
+  }
+
+
+  /* ================= ISSUE BOOK ================= */
+
+  document.getElementById("issueForm")
+          .addEventListener("submit", async function(event) {
+
+            event.preventDefault();
+
+            const issue = {
+
+              bookId:
+                      Number(
+                              document.getElementById("issueBookId").value
+                      ),
+
+              studentId:
+                      Number(
+                              document.getElementById("issueStudentId").value
+                      ),
+
+              issueDate:
+              document.getElementById("issueDate").value
+            };
+
+            try {
+
+              const result =
+                      await api("/issues/issue", {
+                        method: "POST",
+                        body: JSON.stringify(issue)
+                      });
+
+              showToast(
+                      `Book issued successfully. Due date: ${result.dueDate}`,
+                      "success"
+              );
+
+              this.reset();
+
+              document.getElementById("issueDate").value =
+                      new Date().toISOString().split("T")[0];
+
+              loadIssueDropdowns();
+
+              loadDashboard();
+
+            } catch (error) {}
+
+          });
+
+
+  /* ================= ISSUED BOOKS ================= */
+
+  async function loadIssuedBooks() {
+
+    const records =
+            await api("/issues/issued");
+
+    const table =
+            document.getElementById("issuedTable");
+
+    if (!records.length) {
+
+      table.innerHTML =
+              `<tr>
+                    <td colspan="8" class="empty">
+                        No books are currently issued
+                    </td>
+                </tr>`;
+
+      return;
+    }
+
+    table.innerHTML = records.map(record => `
+
+            <tr>
+
+                <td>${record.id}</td>
+
+                <td>${record.bookId}</td>
+
+                <td>${record.studentId}</td>
+
+                <td>${record.issueDate}</td>
+
+                <td>${record.dueDate}</td>
+
+                <td>₹${Number(record.fine || 0).toFixed(2)}</td>
+
+                <td>
+                    <span class="badge badge-issued">
+                        ${record.status}
+                    </span>
+                </td>
+
+                <td>
+
+                    <button
+                        class="btn-success"
+                        onclick="returnBook(${record.id})">
+                        Return
+                    </button>
+
+                </td>
+
+            </tr>
+
+        `).join("");
+  }
+
+
+  async function returnBook(id) {
+
+    if (!confirm("Return this book?")) return;
+
+    try {
+
+      const record =
+              await api(`/issues/return/${id}`, {
+                method: "POST"
+              });
+
+      showToast(
+              `Book returned. Fine: ₹${Number(record.fine || 0).toFixed(2)}`,
+              "success"
+      );
+
+      loadIssuedBooks();
+      loadDashboard();
+
+    } catch (error) {}
+
+  }
+
+
+  /* ================= SEARCH ================= */
+
+  async function searchBooks() {
+
+    const title =
+            document.getElementById("searchTitle").value.trim();
+
+    const author =
+            document.getElementById("searchAuthor").value.trim();
+
+    const category =
+            document.getElementById("searchCategory").value.trim();
+
+    const params = new URLSearchParams();
+
+    if (title) params.append("title", title);
+
+    if (author) params.append("author", author);
+
+    if (category) params.append("category", category);
+
+    const books =
+            await api(
+                    "/books/search?" + params.toString()
+            );
+
+    const table =
+            document.getElementById("searchTable");
+
+    if (!books.length) {
+
+      table.innerHTML =
+              `<tr>
+                    <td colspan="6" class="empty">
+                        No matching books found
+                    </td>
+                </tr>`;
+
+      return;
+    }
+
+    table.innerHTML = books.map(book => `
+
+            <tr>
+
+                <td>${book.id}</td>
+
+                <td>
+                    <strong>${escapeHtml(book.title)}</strong>
+                </td>
+
+                <td>${escapeHtml(book.author)}</td>
+
+                <td>${book.isbn || "-"}</td>
+
+                <td>${book.category || "-"}</td>
+
+                <td>${book.numberOfCopies}</td>
+
+            </tr>
+
+        `).join("");
+  }
+
+
+  /* ================= DASHBOARD ================= */
+
+  async function loadDashboard() {
+
+    try {
+
+      const books =
+              await api("/books/all");
+
+      const students =
+              await api("/students/all");
+
+      const issues =
+              await api("/issues/all");
+
+      const issued =
+              await api("/issues/issued");
+
+
+      document.getElementById("bookCount")
+              .textContent = books.length;
+
+      document.getElementById("studentCount")
+              .textContent = students.length;
+
+      document.getElementById("issuedCount")
+              .textContent = issued.length;
+
+
+      const totalFine =
+              issues.reduce(
+                      (sum, item) =>
+                              sum + Number(item.fine || 0),
+                      0
+              );
+
+      document.getElementById("fineCount")
+              .textContent =
+              "₹" + totalFine.toFixed(2);
+
+
+      const table =
+              document.getElementById("dashboardIssues");
+
+
+      if (!issued.length) {
+
+        table.innerHTML =
+                `<tr>
+                        <td colspan="5" class="empty">
+                            No currently issued books
+                        </td>
+                    </tr>`;
+
+      } else {
+
+        table.innerHTML =
+                issued.slice(0, 5).map(record => `
+
+                        <tr>
+
+                            <td>${record.id}</td>
+
+                            <td>Book #${record.bookId}</td>
+
+                            <td>Student #${record.studentId}</td>
+
+                            <td>${record.dueDate}</td>
+
+                            <td>
+                                <span class="badge badge-issued">
+                                    ${record.status}
+                                </span>
+                            </td>
+
+                        </tr>
+
+                    `).join("");
+      }
+
+    } catch (error) {}
+  }
+
+
+  /* ================= REPORTS ================= */
+
+  async function loadReports() {
+
+    const books =
+            await api("/books/all");
+
+    const students =
+            await api("/students/all");
+
+    const issues =
+            await api("/issues/all");
+
+
+    document.getElementById("reportBooks")
+            .textContent = books.length;
+
+    document.getElementById("reportStudents")
+            .textContent = students.length;
+
+    document.getElementById("reportIssued")
+            .textContent =
+            issues.filter(
+                    issue =>
+                            issue.status === "ISSUED"
+            ).length;
+
+
+    const totalFine =
+            issues.reduce(
+                    (sum, issue) =>
+                            sum + Number(issue.fine || 0),
+                    0
+            );
+
+    document.getElementById("reportFine")
+            .textContent =
+            "₹" + totalFine.toFixed(2);
+
+
+    const table =
+            document.getElementById("reportTable");
+
+
+    if (!issues.length) {
+
+      table.innerHTML =
+              `<tr>
+                    <td colspan="8" class="empty">
+                        No issue records available
+                    </td>
+                </tr>`;
+
+      return;
+    }
+
+
+    table.innerHTML = issues.map(issue => `
+
+            <tr>
+
+                <td>${issue.id}</td>
+
+                <td>${issue.bookId}</td>
+
+                <td>${issue.studentId}</td>
+
+                <td>${issue.issueDate}</td>
+
+                <td>${issue.dueDate}</td>
+
+                <td>${issue.returnDate || "-"}</td>
+
+                <td>
+                    ₹${Number(issue.fine || 0).toFixed(2)}
+                </td>
+
+                <td>
+
+                    <span class="badge ${
+            issue.status === "ISSUED"
+                    ? "badge-issued"
+                    : "badge-returned"
+    }">
+
+                        ${issue.status}
+
+                    </span>
+
+                </td>
+
+            </tr>
+
+        `).join("");
+  }
+
+
+  /* ================= HTML SAFETY ================= */
+
+  function escapeHtml(value) {
+
+    if (value === null || value === undefined) {
+      return "";
+    }
+
+    return String(value)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+  }
+
+
+  /* ================= INITIAL LOAD ================= */
+
+  document.addEventListener("DOMContentLoaded", () => {
+
+    loadDashboard();
+
+  });
+
+</script>
+
+</body>
+</html>
